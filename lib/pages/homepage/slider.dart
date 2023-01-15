@@ -42,7 +42,7 @@ class _MeuSliderState extends State<MeuSlider> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 180,
       child: CarouselSlider.builder(
         unlimitedMode: true,
         controller: _sliderController,

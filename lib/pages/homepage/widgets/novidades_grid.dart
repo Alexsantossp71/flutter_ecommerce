@@ -19,7 +19,7 @@ class _NovidadesGridState extends State<NovidadesGrid> {
       'precoDesconto': '100',
     },
     {
-      'nome': 'Camisas',
+      'nome': 'Camisa',
       'imagem': 'images/categorias/camisa2.png',
       'preco': '121',
       'precoDesconto': '101',
@@ -37,13 +37,13 @@ class _NovidadesGridState extends State<NovidadesGrid> {
       'precoDesconto': '103',
     },
     {
-      'nome': 'Gravatas',
+      'nome': 'Gravata',
       'imagem': 'images/categorias/gravatas.png',
       'preco': '124',
       'precoDesconto': '104',
     },
     {
-      'nome': 'Meias',
+      'nome': 'Meia',
       'imagem': 'images/categorias/meias.png',
       'preco': '125',
       'precoDesconto': '105',
@@ -55,8 +55,7 @@ class _NovidadesGridState extends State<NovidadesGrid> {
     return GridView.builder(
         itemCount: novidadesList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
+            crossAxisCount: 2, childAspectRatio: 0.689),
         itemBuilder: ((context, index) {
           return Single_Prod(
             prod_nome: novidadesList[index]['nome'],
@@ -91,7 +90,12 @@ class Single_Prod extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (ctx) => ProductDetails(),
+                  builder: (ctx) => ProductDetails(
+                    prod_detail_nome: prod_nome,
+                    prod_detail_imagem: prod_imagem,
+                    prod_detail_preco: prod_preco,
+                    prod_detail_precoDesconto: prod_precoDesconto,
+                  ),
                 ),
               );
             },
@@ -113,7 +117,7 @@ class Single_Prod extends StatelessWidget {
                     "R\$ $prod_precoDesconto,00",
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                       color: Color.fromARGB(255, 43, 43, 43),
                       fontWeight: FontWeight.bold,
                     ),
@@ -121,7 +125,7 @@ class Single_Prod extends StatelessWidget {
                   leading: Text(
                     prod_nome,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

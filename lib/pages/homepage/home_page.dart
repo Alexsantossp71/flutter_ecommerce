@@ -128,8 +128,10 @@ class _HomePageState extends State<HomePage> {
 
           // SLIDE CATEGORIAS
           SizedBox(height: 90, child: SliderCategorias()),
+
+          ///// TITULO NOVIDADES
           const Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(4.0),
             child: Text(
               "Novidades",
               style: TextStyle(fontWeight: FontWeight.bold),
