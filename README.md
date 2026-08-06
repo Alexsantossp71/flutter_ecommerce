@@ -1,16 +1,59 @@
-# flutter_ecommerce
+# 🛒 Flutter E-commerce
 
-A new Flutter project.
+> Aplicativo mobile de e-commerce em Flutter com home, categorias, novidades e detalhes de produto.
 
-## Getting Started
+## 📌 Sobre
 
-This project is a starting point for a Flutter application.
+App de e-commerce desenvolvido em **Flutter** como projeto de estudo, com foco em uma experiência de compra completa:
 
-A few resources to get you started if this is your first Flutter project:
+- 🏠 **Home page** com slider de destaques e navegação por categorias
+- 🗂️ **Categorias** com carrossel de produtos
+- ✨ **Novidades** em grid
+- 📦 **Detalhes do produto** com informações completas
+- 📱 Interface responsiva e em português
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🛠️ Tecnologias
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Flutter** (Dart)
+- Material Design
+- Arquitetura simples por páginas (home, detalhes do produto, modelos de dados)
+
+## 📁 Estrutura
+
+```
+lib/
+├── main.dart                          # Ponto de entrada
+├── model/
+│   └── slidercategorias_model.dart    # Modelo de categorias/slider
+├── pages/
+│   └── homepage/
+│       ├── home_page.dart             # Página principal
+│       ├── slider.dart                # Slider de destaques
+│       └── widgets/
+│           ├── categories_slider.dart # Carrossel de categorias
+│           └── novidades_grid.dart    # Grid de novidades
+└── product_details/
+    └── product_details.dart           # Tela de detalhes do produto
+```
+
+## 🚀 Como executar localmente
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/Alexsantossp71/flutter_ecommerce.git
+cd flutter_ecommerce
+
+# 2. Instale as dependências
+flutter pub get
+
+# 3. Execute (emulador ou dispositivo conectado)
+flutter run
+```
+
+## 👤 Autor
+
+**Alexandre Ramos** — [github.com/Alexsantossp71](https://github.com/Alexsantossp71)
+
+## 📄 Status
+
+Projeto de estudo funcional (última atualização: janeiro/2023).
