@@ -18,7 +18,7 @@ class DemoProductRepository implements ProductRepository {
           'Perfeita para o dia a dia na cidade ou na praia.',
       price: 59.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/camisa2.png',
+      imageAsset: 'images/products/camiseta-mar.jpg',
       isFeatured: true,
     ),
     Product(
@@ -29,7 +29,7 @@ class DemoProductRepository implements ProductRepository {
           'Combina com bermuda e chinelo — visual praiano autêntico.',
       price: 79.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/camisa.png',
+      imageAsset: 'images/products/camiseta-listrada.jpg',
       isFeatured: true,
     ),
     Product(
@@ -40,7 +40,7 @@ class DemoProductRepository implements ProductRepository {
           'Bolsos com fecho e elástico ajustável.',
       price: 89.90,
       category: 'Praia',
-      imageAsset: 'images/categorias/bermuda.png',
+      imageAsset: 'images/products/bermuda-praia.jpg',
       isFeatured: true,
     ),
     Product(
@@ -51,7 +51,7 @@ class DemoProductRepository implements ProductRepository {
           'Clássica, versátil e pronta para qualquer ocasião.',
       price: 129.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/calça.png',
+      imageAsset: 'images/products/calca-jeans.jpg',
     ),
     Product(
       id: 'moletom-leve',
@@ -61,7 +61,7 @@ class DemoProductRepository implements ProductRepository {
           'Toque de algodão e modelagem despojada.',
       price: 149.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/moleton.png',
+      imageAsset: 'images/products/moletom-leve.jpg',
       isFeatured: true,
     ),
     Product(
@@ -72,7 +72,7 @@ class DemoProductRepository implements ProductRepository {
           'e cabedal respirável para o clima litorâneo.',
       price: 199.90,
       category: 'Calçados',
-      imageAsset: 'images/categorias/tenis.png',
+      imageAsset: 'images/products/tenis-casual.jpg',
       isFeatured: true,
     ),
     Product(
@@ -83,7 +83,7 @@ class DemoProductRepository implements ProductRepository {
           'Respiração reforçada para o dia a dia.',
       price: 29.90,
       category: 'Acessórios',
-      imageAsset: 'images/categorias/meias.png',
+      imageAsset: 'images/products/meias-pack.jpg',
     ),
     Product(
       id: 'gravata-slim',
@@ -93,7 +93,7 @@ class DemoProductRepository implements ProductRepository {
           'O toque de elegância para eventos e ocasiões especiais.',
       price: 69.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/gravatas.png',
+      imageAsset: 'images/products/gravata-slim.jpg',
     ),
     Product(
       id: 'cuecas-pack',
@@ -103,7 +103,7 @@ class DemoProductRepository implements ProductRepository {
           'e costuras planas para máximo conforto.',
       price: 49.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/cuecas.png',
+      imageAsset: 'images/products/cuecas-pack.jpg',
     ),
     Product(
       id: 'agasalho-urbano',
@@ -113,7 +113,7 @@ class DemoProductRepository implements ProductRepository {
           'Bolso canguru e toque aveludado.',
       price: 169.90,
       category: 'Moda',
-      imageAsset: 'images/categorias/agasalho.png',
+      imageAsset: 'images/products/agasalho-urbano.jpg',
     ),
   ];
 }

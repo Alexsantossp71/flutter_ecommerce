@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
+import '../theme/app_theme.dart';
 import 'currency.dart';
 
-/// Card de produto usado na grade da home.
-class ProductCard extends StatelessWidget {
+/// Card premium de produto com fade-in, hover (desktop) e
+/// transição Hero para a página de detalhes.
+class ProductCard extends StatefulWidget {
   const ProductCard({
     super.key,
     required this.product,
@@ -19,97 +21,138 @@ class ProductCard extends StatelessWidget {
   final VoidCallback onAddToCart;
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final product = widget.product;
     final cart = context.read<CartProvider>();
     final inCart = cart.items.any((item) => item.product.id == product.id);
+    final theme = Theme.of(context);
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(product.imageAsset, fit: BoxFit.cover),
-                  if (product.isFeatured)
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: const Text(
-                          'Destaque',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOut,
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: const Duration(milliseconds: 420),
+          curve: Curves.easeOut,
+          builder: (context, value, child) =>
+              Opacity(opacity: value, child: child),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: widget.onTap,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    product.category,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.outline),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        formatCurrency(product.price),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Hero(
+                          tag: 'product-${product.id}',
+                          child: Image.asset(
+                            product.imageAsset,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: onAddToCart,
-                        icon: Icon(
-                          inCart
-                              ? Icons.check_circle
-                              : Icons.add_shopping_cart,
+                        if (product.isFeatured)
+                          Positioned(
+                            top: 10,
+                            left: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppTheme.gold,
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: const Text(
+                                'DESTAQUE',
+                                style: TextStyle(
+                                  color: AppTheme.deep,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.category.toUpperCase(),
+                          style: TextStyle(
+                            color: AppTheme.gold,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.2,
+                          ),
                         ),
-                        tooltip: inCart
-                            ? 'No carrinho'
-                            : 'Adicionar ao carrinho',
-                        color: inCart
-                            ? theme.colorScheme.tertiary
-                            : theme.colorScheme.primary,
-                      ),
-                    ],
+                        const SizedBox(height: 3),
+                        Text(
+                          product.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              formatCurrency(product.price),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                color: AppTheme.sea,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            // botão circular de adicionar
+                            Material(
+                              color: inCart ? AppTheme.gold : AppTheme.sea,
+                              shape: const CircleBorder(),
+                              child: InkWell(
+                                customBorder: const CircleBorder(),
+                                onTap: widget.onAddToCart,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    inCart
+                                        ? Icons.check
+                                        : Icons.add_shopping_cart,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
