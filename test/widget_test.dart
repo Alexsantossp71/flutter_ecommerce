@@ -165,8 +165,7 @@ void main() {
     await tester.tap(find.text('Ver carrinho'));
     await _settle(tester);
 
-    // vai para o checkout
-    await _scrollTo(tester, find.text('Finalizar compra'));
+    // vai para o checkout (botão fica na barra fixa inferior do carrinho)
     await tester.tap(find.text('Finalizar compra'));
     await _settle(tester);
 
@@ -181,8 +180,8 @@ void main() {
     // escolhe PIX e confirma
     await tester.tap(find.text('Pix'));
     await tester.pump();
-    await tester.ensureVisible(find.text('Confirmar pedido'));
-    await tester.tap(find.text('Confirmar pedido'));
+    await _scrollTo(tester, find.text('Confirmar pedido'));
+    await tester.tap(find.text('Confirmar pedido'), warnIfMissed: true);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
 
