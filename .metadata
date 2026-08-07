@@ -1,11 +1,11 @@
 # This file tracks properties of this Flutter project.
 # Used by Flutter tool to assess capabilities and perform upgrades etc.
 #
-# This file should be version controlled.
+# This file should be version controlled and should not be manually edited.
 
 version:
-  revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-  channel: master
+  revision: "6b182d2c7585eba26d4edce0f97630effd256c33"
+  channel: "stable"
 
 project_type: app
 
@@ -13,26 +13,17 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
+      create_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
+      base_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
     - platform: android
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
+      create_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
+      base_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
     - platform: ios
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-    - platform: linux
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-    - platform: macos
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
+      create_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
+      base_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
     - platform: web
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-    - platform: windows
-      create_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
-      base_revision: 025ce117b7eda83a1402c2b74372a290cfa6da4e
+      create_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
+      base_revision: 6b182d2c7585eba26d4edce0f97630effd256c33
 
   # User provided section
 
