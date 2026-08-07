@@ -9,7 +9,7 @@ import 'package:flutter_ecommerce/widgets/product_card.dart';
 /// (asset de imagem e layout em viewport de teste). Qualquer outra
 /// exceção falha o teste.
 void _drainToleratedExceptions(WidgetTester tester) {
-  for (var i = 0; i < 30; i++) {
+  for (var i = 0; i < 50; i++) {
     final ex = tester.takeException();
     if (ex == null) break;
     final msg = ex.toString();
@@ -21,6 +21,14 @@ void _drainToleratedExceptions(WidgetTester tester) {
       fail('Exceção inesperada ao iniciar o app: $msg');
     }
   }
+}
+
+/// Avança frames com durações fixas (evita o bug do pumpAndSettle
+/// com animações infinitas do framework).
+Future<void> _advance(WidgetTester tester,
+    [Duration duration = const Duration(milliseconds: 600)]) async {
+  await tester.pump();
+  await tester.pump(duration);
 }
 
 void _usePhoneViewport(WidgetTester tester) {
@@ -38,7 +46,8 @@ void main() {
     _usePhoneViewport(tester);
 
     app.main();
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Identidade da loja visível
     expect(find.text('Moda Praia Santos'), findsOneWidget);
@@ -56,11 +65,13 @@ void main() {
     _usePhoneViewport(tester);
 
     app.main();
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Toca no primeiro produto da grade
     await tester.tap(find.byType(ProductCard).first);
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Tela de detalhes com botão de adicionar e benefícios
     expect(find.text('Adicionar ao carrinho'), findsOneWidget);
@@ -74,7 +85,8 @@ void main() {
     _usePhoneViewport(tester);
 
     app.main();
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Adiciona o primeiro produto pelo botão do card
     final firstCard = find.byType(ProductCard).first;
@@ -84,11 +96,13 @@ void main() {
         matching: find.byIcon(Icons.add_shopping_cart),
       ),
     );
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Abre o carrinho pelo ícone no topo
     await tester.tap(find.byTooltip('Carrinho'));
-    await tester.pumpAndSettle();
+    await _advance(tester);
+    await _advance(tester);
 
     // Carrinho com resumo do pedido
     expect(find.text('Resumo do pedido'), findsOneWidget);
