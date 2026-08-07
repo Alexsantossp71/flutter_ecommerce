@@ -10,7 +10,7 @@ Product _product(String id, double price) => Product(
       description: 'Descrição do produto $id',
       price: price,
       category: 'Moda',
-      imageAsset: 'images/categorias/camisa.png',
+      imageAsset: 'images/products/camiseta-mar.jpg',
     );
 
 void main() {

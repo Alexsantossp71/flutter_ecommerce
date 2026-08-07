@@ -23,19 +23,22 @@ void _drainToleratedExceptions(WidgetTester tester) {
   }
 }
 
+void _usePhoneViewport(WidgetTester tester) {
+  tester.view.physicalSize = const Size(390, 844);
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
+}
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
 
   testWidgets('app inicia e renderiza a loja', (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    _usePhoneViewport(tester);
 
     app.main();
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
 
     // Identidade da loja visível
     expect(find.text('Moda Praia Santos'), findsOneWidget);
@@ -43,27 +46,53 @@ void main() {
     expect(find.byType(TextField), findsOneWidget);
     // Categorias carregadas (chips)
     expect(find.byType(ChoiceChip), findsWidgets);
+    // Produtos na grade
+    expect(find.byType(ProductCard), findsWidgets);
 
     _drainToleratedExceptions(tester);
   });
 
   testWidgets('abrir detalhe de um produto', (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    _usePhoneViewport(tester);
 
     app.main();
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
 
     // Toca no primeiro produto da grade
-    final firstCard = find.byType(ProductCard).first;
-    await tester.tap(firstCard);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byType(ProductCard).first);
+    await tester.pumpAndSettle();
 
-    // Tela de detalhes com botão de adicionar
+    // Tela de detalhes com botão de adicionar e benefícios
     expect(find.text('Adicionar ao carrinho'), findsOneWidget);
+    expect(find.text('Frete grátis'), findsOneWidget);
+
+    _drainToleratedExceptions(tester);
+  });
+
+  testWidgets('fluxo de compra: adicionar ao carrinho e abrir o carrinho',
+      (WidgetTester tester) async {
+    _usePhoneViewport(tester);
+
+    app.main();
+    await tester.pumpAndSettle();
+
+    // Adiciona o primeiro produto pelo botão do card
+    final firstCard = find.byType(ProductCard).first;
+    await tester.tap(
+      find.descendant(
+        of: firstCard,
+        matching: find.byIcon(Icons.add_shopping_cart),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Abre o carrinho pelo ícone no topo
+    await tester.tap(find.byTooltip('Carrinho'));
+    await tester.pumpAndSettle();
+
+    // Carrinho com resumo do pedido
+    expect(find.text('Resumo do pedido'), findsOneWidget);
+    expect(find.text('Finalizar compra'), findsOneWidget);
 
     _drainToleratedExceptions(tester);
   });

@@ -54,12 +54,12 @@ class CartProvider extends ChangeNotifier {
     await prefs.setString(_storageKey, data);
   }
 
-  Future<void> addProduct(Product product) async {
+  Future<void> addProduct(Product product, {int quantity = 1}) async {
     final index = _items.indexWhere((item) => item.product.id == product.id);
     if (index >= 0) {
-      _items[index].quantity += 1;
+      _items[index].quantity += quantity;
     } else {
-      _items.add(CartItem(product: product));
+      _items.add(CartItem(product: product, quantity: quantity));
     }
     notifyListeners();
     await _persist();
