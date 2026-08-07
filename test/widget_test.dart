@@ -5,9 +5,13 @@ void main() {
   testWidgets('app inicia sem erros fatais', (WidgetTester tester) async {
     app.main();
     await tester.pump();
-    // Tolerâncias esperadas em apps legados sem mocks de rede/assets:
-    final ex = tester.takeException();
-    if (ex != null) {
+    // Avança o tempo para expirar timers de splash/navegação (ex.: 5s).
+    await tester.pump(const Duration(seconds: 10));
+    // Drena exceções toleradas (assets/rede/overflow de apps legados sem mocks);
+    // qualquer outra exceção falha o teste.
+    for (var i = 0; i < 30; i++) {
+      final ex = tester.takeException();
+      if (ex == null) break;
       final msg = ex.toString();
       if (!msg.contains('Unable to load asset') &&
           !msg.contains('NetworkImage') &&
