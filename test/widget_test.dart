@@ -80,7 +80,7 @@ void main() {
     _drainToleratedExceptions(tester);
   });
 
-  testWidgets('fluxo de compra: adicionar ao carrinho e abrir o carrinho',
+  testWidgets('fluxo de compra: detalhe → adicionar → carrinho',
       (WidgetTester tester) async {
     _usePhoneViewport(tester);
 
@@ -88,18 +88,22 @@ void main() {
     await _advance(tester);
     await _advance(tester);
 
-    // Adiciona o primeiro produto pelo botão do card
-    final firstCard = find.byType(ProductCard).first;
-    await tester.tap(
-      find.descendant(
-        of: firstCard,
-        matching: find.byIcon(Icons.add_shopping_cart),
-      ),
-    );
+    // 1. Abre o detalhe do primeiro produto
+    await tester.tap(find.byType(ProductCard).first);
     await _advance(tester);
     await _advance(tester);
 
-    // Abre o carrinho pelo ícone no topo
+    // 2. Adiciona ao carrinho pelo botão principal do detalhe
+    await tester.tap(find.text('Adicionar ao carrinho'));
+    await _advance(tester);
+    await _advance(tester);
+
+    // 3. Volta para a home
+    await tester.pageBack();
+    await _advance(tester);
+    await _advance(tester);
+
+    // 4. Abre o carrinho pelo ícone no topo
     await tester.tap(find.byTooltip('Carrinho'));
     await _advance(tester);
     await _advance(tester);
