@@ -6,7 +6,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 class MeuSlider extends StatefulWidget {
   String title = '';
 
-  MeuSlider({Key? key, required this.title}) : super(key: key);
+  MeuSlider({super.key, required this.title});
 
   @override
   _MeuSliderState createState() => _MeuSliderState();
