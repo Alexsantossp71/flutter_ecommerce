@@ -8,10 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ver estado do repo
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build web --release --base-href=/flutter_ecommerce/
+      - name: Inspecionar resultado
         run: |
-          echo "=== PWD ==="; pwd
-          echo "=== images/ ==="; ls -la images/ 2>&1
-          echo "=== images/products/ ==="; ls -la images/products/ 2>&1
-          echo "=== pubspec (flutter section) ==="; sed -n '/^flutter:/,$p' pubspec.yaml
-          echo "=== git log ==="; git log -1 --format='%H %s'
+          echo "=== build/web/assets/images/ ==="
+          find build/web/assets/images -type f 2>&1
+          echo "=== AssetManifest.bin.json ==="
+          cat build/web/assets/AssetManifest.bin.json 2>/dev/null | head -c 500
+          echo ""
+          echo "=== pubspec.yaml tamanho ==="
+          wc -c pubspec.yaml
+          echo "=== sha256 dos products ==="
+          sha256sum images/products/camiseta-mar.jpg images/products/tenis-casual.jpg
