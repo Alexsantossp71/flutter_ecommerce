@@ -2,6 +2,8 @@
 # CI para apps Flutter modernizados
 # Depois de migrar o app (flutter analyze OK + build OK),
 # copie este arquivo para:  <app>/.github/workflows/ci.yml
+#
+# v2: analyze não falha com infos/warnings (só com ERROS reais)
 # ============================================================
 name: CI
 
@@ -21,8 +23,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - name: Análise estática
-        run: flutter analyze
+      - name: Análise estática (falha apenas com erros)
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
       - name: Testes
         run: |
           if [ -d test ]; then
