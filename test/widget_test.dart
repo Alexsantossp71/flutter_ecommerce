@@ -94,7 +94,11 @@ void main() {
     await _advance(tester);
 
     // 2. Adiciona ao carrinho pelo botão principal do detalhe
-    await tester.tap(find.text('Adicionar ao carrinho'));
+    // (o botão fica abaixo da dobra — garante que está visível antes do tap)
+    final addButton = find.text('Adicionar ao carrinho');
+    await tester.ensureVisible(addButton);
+    await tester.pump();
+    await tester.tap(addButton);
     await _advance(tester);
     await _advance(tester);
 
