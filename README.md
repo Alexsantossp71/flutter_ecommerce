@@ -1,59 +1,100 @@
-# 🛒 Flutter E-commerce
+# 🏖️ Moda Praia Santos
 
-> Aplicativo mobile de e-commerce em Flutter com home, categorias, novidades e detalhes de produto.
+> E-commerce de moda praia com catálogo, busca, carrinho persistente e checkout — construído em **Flutter** e publicado no **GitHub Pages**.
 
-## 📌 Sobre
+**🔗 Demo ao vivo:** https://alexsantossp71.github.io/flutter_ecommerce/
 
-App de e-commerce desenvolvido em **Flutter** como projeto de estudo, com foco em uma experiência de compra completa:
+---
 
-- 🏠 **Home page** com slider de destaques e navegação por categorias
-- 🗂️ **Categorias** com carrossel de produtos
-- ✨ **Novidades** em grid
-- 📦 **Detalhes do produto** com informações completas
-- 📱 Interface responsiva e em português
+## 📖 A história
+
+Este projeto começou como um app de estudo (2023) com dados fixos no código — uma vitrine estática. Ele foi **reconstruído** com o objetivo de virar um case de portfólio:
+
+| Antes (estudo) | Agora (portfólio) |
+|---|---|
+| Dados de produtos fixos na tela | **Catálogo via repositório** (camada de dados desacoplada) |
+| Sem carrinho | **Carrinho real**: adicionar, quantidade, total e **persistência local** |
+| Sem checkout | **Fluxo completo**: carrinho → checkout → pedido confirmado |
+| Sem busca | **Busca e filtro por categoria** |
+| Sem testes | **Testes unitários** do carrinho + **testes de widget** |
+| Tema padrão do Flutter | **Identidade própria** (Moda Praia Santos) |
+
+---
 
 ## 🛠️ Tecnologias
 
-- **Flutter** (Dart)
-- Material Design
-- Arquitetura simples por páginas (home, detalhes do produto, modelos de dados)
+- **Flutter** (Dart 3) — UI multiplataforma
+- **Provider** — gerenciamento de estado (carrinho e catálogo)
+- **shared_preferences** — persistência do carrinho no navegador/dispositivo
+- **GitHub Actions** — CI (analyze + testes) e deploy automático no GitHub Pages
 
-## 📁 Estrutura
+---
+
+## 🏗️ Arquitetura
 
 ```
 lib/
-├── main.dart                          # Ponto de entrada
-├── model/
-│   └── slidercategorias_model.dart    # Modelo de categorias/slider
-├── pages/
-│   └── homepage/
-│       ├── home_page.dart             # Página principal
-│       ├── slider.dart                # Slider de destaques
-│       └── widgets/
-│           ├── categories_slider.dart # Carrossel de categorias
-│           └── novidades_grid.dart    # Grid de novidades
-└── product_details/
-    └── product_details.dart           # Tela de detalhes do produto
+├── main.dart                     # Bootstrap + providers
+├── app.dart                      # MaterialApp + tema
+├── theme/                        # Identidade visual (cores do litoral)
+├── models/                       # Product, CartItem, Order
+├── data/
+│   ├── product_repository.dart   # Interface da fonte de produtos
+│   └── demo_product_repository.dart  # Implementação demo (dados locais)
+├── providers/
+│   ├── cart_provider.dart        # Estado do carrinho + persistência
+│   └── catalog_provider.dart     # Catálogo + busca + categoria
+├── pages/                        # Home, detalhe, carrinho, checkout, sucesso
+└── widgets/                      # ProductCard, formatação de moeda
 ```
+
+O ponto-chave: **as telas dependem de `ProductRepository` (abstração)** — para trocar o demo por Firebase/API, basta criar uma nova implementação e injetá-la no `main.dart`, sem tocar em nenhuma tela.
+
+---
 
 ## 🚀 Como executar localmente
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/Alexsantossp71/flutter_ecommerce.git
 cd flutter_ecommerce
-
-# 2. Instale as dependências
 flutter pub get
-
-# 3. Execute (emulador ou dispositivo conectado)
-flutter run
+flutter run          # ou: flutter run -d chrome
 ```
 
-## 👤 Autor
+### Testes
 
-**Alexandre Ramos** — [github.com/Alexsantossp71](https://github.com/Alexsantossp71)
+```bash
+flutter analyze
+flutter test
+```
 
-## 📄 Status
+### Build web
 
-Projeto de estudo funcional (última atualização: janeiro/2023).
+```bash
+flutter build web --release --base-href=/flutter_ecommerce/
+```
+
+---
+
+## ✨ Funcionalidades
+
+- 🛍️ **Catálogo** com 10 produtos de moda praia, categorias e busca
+- ⭐ **Slider de destaques** na home
+- 🛒 **Carrinho persistente** — sobrevive ao fechar o navegador
+- 💳 **Checkout simulado** (cartão ou Pix) com tela de pedido confirmado
+- 📱 **Responsivo** e pronto para PWA (instalável no navegador)
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] **Firebase Auth** — login e cadastro reais
+- [ ] **Firestore** — produtos dinâmicos (substituir o repositório demo)
+- [ ] **Histórico de pedidos** por usuário
+- [ ] **Catálogo admin** para gerenciar produtos
+
+---
+
+## 📄 Licença
+
+MIT — © 2026 Alexandre Ramos
