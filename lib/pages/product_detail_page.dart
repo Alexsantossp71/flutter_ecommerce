@@ -18,13 +18,14 @@ class ProductDetailPage extends StatelessWidget {
     final catalog = context.watch<CatalogProvider>();
     final cart = context.read<CartProvider>();
 
-    Product? product;
+    Product? found;
     for (final p in catalog.products) {
       if (p.id == productId) {
-        product = p;
+        found = p;
         break;
       }
     }
+    final product = found; // cópia para variável final: permite null-promotion
     if (product == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Produto')),
