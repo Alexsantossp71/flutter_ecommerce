@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -153,17 +155,31 @@ void main() {
       (WidgetTester tester) async {
     _usePhoneViewport(tester);
 
+    // Carrinho pré-populado (mesma estrutura que CartProvider persiste),
+    // simulando um usuário que já adicionou itens antes.
+    SharedPreferences.setMockInitialValues({
+      'moda_praia_cart_v1': jsonEncode([
+        {
+          'product': {
+            'id': 'camiseta-mar',
+            'name': 'Camiseta Básica Mar',
+            'description': 'Camiseta em algodão premium.',
+            'price': 59.9,
+            'category': 'Moda',
+            'imageAsset': 'images/products/camiseta-mar.jpg',
+            'isFeatured': true,
+          },
+          'quantity': 2,
+        },
+      ]),
+    });
+
     await _startApp(tester);
 
-    // adiciona o primeiro produto ao carrinho pela grade
-    await tester.tap(find.byType(ProductCard).first);
+    // abre o carrinho direto pelo ícone na AppBar
+    await tester.tap(find.byTooltip('Carrinho'));
     await _settle(tester);
-    await _scrollTo(tester, find.text('Adicionar ao carrinho'));
-    await tester.tap(find.text('Adicionar ao carrinho'));
-    await _settle(tester);
-    await _scrollTo(tester, find.text('Ver carrinho'));
-    await tester.tap(find.text('Ver carrinho'));
-    await _settle(tester);
+    expect(find.text('Finalizar compra'), findsOneWidget);
 
     // vai para o checkout (botão fica na barra fixa inferior do carrinho)
     await tester.tap(find.text('Finalizar compra'));
