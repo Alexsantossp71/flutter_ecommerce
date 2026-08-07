@@ -41,13 +41,7 @@ class _ProductCardState extends State<ProductCard> {
         scale: _hovered ? 1.02 : 1.0,
         duration: const Duration(milliseconds: 180),
         curve: Curves.easeOut,
-        child: TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0, end: 1),
-          duration: const Duration(milliseconds: 420),
-          curve: Curves.easeOut,
-          builder: (context, value, child) =>
-              Opacity(opacity: value, child: child),
-          child: Card(
+        child: Card(
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               onTap: widget.onTap,

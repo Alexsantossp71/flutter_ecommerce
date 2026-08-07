@@ -74,11 +74,14 @@ void main() {
 
     // Toca no primeiro produto da grade
     final firstCard = find.byType(ProductCard).first;
+    await tester.ensureVisible(firstCard);
     await tester.tap(firstCard);
     await _settle(tester);
 
-    // Tela de detalhes com botão de adicionar
-    expect(find.text('Adicionar ao carrinho'), findsOneWidget);
+    // Tela de detalhes com botão de adicionar (rola até ele se preciso)
+    final addBtn = find.text('Adicionar ao carrinho');
+    await tester.ensureVisible(addBtn);
+    expect(addBtn, findsOneWidget);
 
     _drainToleratedExceptions(tester);
   });
@@ -92,8 +95,10 @@ void main() {
     // abre o detalhe do primeiro produto
     await tester.tap(find.byType(ProductCard).first);
     await _settle(tester);
+    await tester.ensureVisible(find.text('Adicionar ao carrinho'));
     await tester.tap(find.text('Adicionar ao carrinho'));
     await _settle(tester);
+    await tester.ensureVisible(find.text('Ver carrinho'));
     await tester.tap(find.text('Ver carrinho'));
     await _settle(tester);
 
@@ -136,12 +141,15 @@ void main() {
     // adiciona o primeiro produto ao carrinho pela grade
     await tester.tap(find.byType(ProductCard).first);
     await _settle(tester);
+    await tester.ensureVisible(find.text('Adicionar ao carrinho'));
     await tester.tap(find.text('Adicionar ao carrinho'));
     await _settle(tester);
+    await tester.ensureVisible(find.text('Ver carrinho'));
     await tester.tap(find.text('Ver carrinho'));
     await _settle(tester);
 
     // vai para o checkout
+    await tester.ensureVisible(find.text('Finalizar compra'));
     await tester.tap(find.text('Finalizar compra'));
     await _settle(tester);
 
@@ -156,6 +164,7 @@ void main() {
     // escolhe PIX e confirma
     await tester.tap(find.text('Pix'));
     await tester.pump();
+    await tester.ensureVisible(find.text('Confirmar pedido'));
     await tester.tap(find.text('Confirmar pedido'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 600));
