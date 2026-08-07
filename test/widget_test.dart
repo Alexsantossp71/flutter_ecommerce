@@ -206,8 +206,10 @@ void main() {
     expect(find.text('Pix copia e cola'), findsOneWidget);
 
     // simula o pagamento (usa pump controlado: a tela tem spinner contínuo)
+    await _scrollTo(tester, find.text('Simular pagamento agora'));
     await tester.tap(find.text('Simular pagamento agora'));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Pagamento confirmado!'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 1500));
     await tester.pump(const Duration(milliseconds: 600));
