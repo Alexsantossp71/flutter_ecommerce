@@ -12,16 +12,22 @@ jobs:
         with:
           channel: stable
           cache: true
-      - run: flutter pub get
-      - run: flutter build web --release --base-href=/flutter_ecommerce/
+      - name: Estado do checkout (imagens)
+        run: |
+          echo "=== images/ no checkout ==="
+          find images -type f -exec ls -la {} \; 2>&1
+          echo ""
+          echo "=== pubspec.yaml ==="
+          cat pubspec.yaml
+      - name: Build
+        run: flutter pub get && flutter build web --release --base-href=/flutter_ecommerce/
       - name: Inspecionar resultado
         run: |
-          echo "=== build/web/assets/images/ ==="
-          find build/web/assets/images -type f 2>&1
-          echo "=== AssetManifest.bin.json ==="
-          cat build/web/assets/AssetManifest.bin.json 2>/dev/null | head -c 500
+          echo "=== build/web/assets/ (completo) ==="
+          find build/web/assets -type f 2>&1
           echo ""
-          echo "=== pubspec.yaml tamanho ==="
-          wc -c pubspec.yaml
-          echo "=== sha256 dos products ==="
-          sha256sum images/products/camiseta-mar.jpg images/products/tenis-casual.jpg
+          echo "=== AssetManifest.bin.json (completo) ==="
+          cat build/web/assets/AssetManifest.bin.json
+          echo ""
+          echo "=== Tamanho do build ==="
+          du -sh build/web
