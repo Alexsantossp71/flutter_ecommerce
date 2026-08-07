@@ -7,6 +7,7 @@ import '../providers/cart_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/currency.dart';
 import 'order_success_page.dart';
+import 'pix_payment_page.dart';
 
 /// Checkout simulado: dados do cliente + forma de pagamento.
 /// No desktop (>=900px): formulário à esquerda e resumo do pedido à direita.
@@ -46,7 +47,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
     final items = cart.items
         .map((item) => CartItem(product: item.product, quantity: item.quantity))
         .toList();
-
     final order = Order(
       id: 'MP-${DateTime.now().millisecondsSinceEpoch % 100000}',
       items: items,
@@ -58,8 +58,38 @@ class _CheckoutPageState extends State<CheckoutPage> {
       createdAt: DateTime.now(),
     );
 
-    cart.clear();
+    if (_paymentMethod == 'Pix') {
+      // Fluxo PIX simulado: QR Code + copia-e-cola + confirmação.
+      // O carrinho só é limpo após o "pagamento" confirmar.
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PixPaymentPage(
+            customerName: order.customerName,
+            address: order.address,
+            items: order.items,
+            total: order.total,
+          ),
+        ),
+      );
+      return;
+    }
 
+    // Fluxo cartão simulado: "processando" por ~2,5 s.
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const _ProcessingDialog(),
+    );
+    Future<void>.delayed(const Duration(milliseconds: 2500), () {
+      if (!mounted) return;
+      Navigator.of(context).pop(); // fecha o dialog
+      _finishOrder(context, order, cart);
+    });
+  }
+
+  /// Conclui o pedido: limpa o carrinho e mostra a confirmação.
+  void _finishOrder(BuildContext context, Order order, CartProvider cart) {
+    cart.clear();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => OrderSuccessPage(order: order)),
     );
@@ -197,6 +227,46 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 );
               },
             ),
+    );
+  }
+}
+
+/// Diálogo de "processando pagamento" (simulação do cartão).
+class _ProcessingDialog extends StatelessWidget {
+  const _ProcessingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return const PopScope(
+      canPop: false,
+      child: Dialog(
+        child: Padding(
+          padding: EdgeInsets.all(28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 36,
+                height: 36,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: AppTheme.sea,
+                ),
+              ),
+              SizedBox(height: 18),
+              Text(
+                'Processando pagamento...',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 6),
+              Text(
+                'Simulação — nenhuma cobrança real',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

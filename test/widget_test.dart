@@ -137,6 +137,59 @@ void main() {
 
     _drainToleratedExceptions(tester);
   });
+  testWidgets('fluxo PIX: checkout → QR Code → confirmação simulada',
+      (WidgetTester tester) async {
+    _usePhoneViewport(tester);
 
+    app.main();
+    await _advance(tester);
+    await _advance(tester);
+
+    // adiciona o primeiro produto ao carrinho pela grade
+    await tester.tap(find.byType(ProductCard).first);
+    await _advance(tester);
+    await tester.tap(find.text('Adicionar ao carrinho'));
+    await _advance(tester);
+    await tester.tap(find.text('Ver carrinho'));
+    await _advance(tester);
+    await _advance(tester);
+
+    // vai para o checkout
+    await tester.tap(find.text('Finalizar compra'));
+    await _advance(tester);
+    await _advance(tester);
+
+    // preenche o formulário
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), 'Maria da Silva');
+    await tester.enterText(fields.at(1), '(13) 99999-0000');
+    await tester.enterText(fields.at(2), 'Av. do Contorno, 100');
+    await tester.enterText(fields.at(3), 'Santos/SP');
+    await _advance(tester);
+
+    // escolhe PIX e confirma
+    await tester.tap(find.text('Pix'));
+    await _advance(tester);
+    await tester.tap(find.text('Confirmar pedido'));
+    await _advance(tester);
+    await _advance(tester);
+
+    // tela de pagamento PIX com QR Code e aviso de demonstração
+    expect(find.text('Pagamento via PIX'), findsOneWidget);
+    expect(find.text('Pix copia e cola'), findsOneWidget);
+    expect(find.textContaining('nenhuma cobrança real'), findsOneWidget);
+
+    // simula o pagamento e aguarda a confirmação
+    await tester.tap(find.text('Simular pagamento agora'));
+    await _advance(tester);
+    expect(find.text('Pagamento confirmado!'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1500));
+    await _advance(tester);
+
+    // pedido confirmado
+    expect(find.text('Pedido confirmado!'), findsOneWidget);
+
+    _drainToleratedExceptions(tester);
+  });
 
 }

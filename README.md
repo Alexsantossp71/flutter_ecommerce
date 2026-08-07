@@ -81,8 +81,16 @@ flutter build web --release --base-href=/flutter_ecommerce/
 - 🛍️ **Catálogo** com 10 produtos de moda praia, categorias e busca
 - ⭐ **Slider de destaques** na home
 - 🛒 **Carrinho persistente** — sobrevive ao fechar o navegador
-- 💳 **Checkout simulado** (cartão ou Pix) com tela de pedido confirmado
-- 📱 **Responsivo** e pronto para PWA (instalável no navegador)
+- 💳 **Checkout simulado completo**:
+  - **Pix**: QR Code fictício (chave demo inexistente), código copia-e-cola
+    e confirmação automática em 15s — experiência real, cobrança nenhuma
+  - **Cartão**: processamento simulado de ~2,5s com tela de confirmação
+- ✅ **Pedido confirmado** com número, resumo, entrega e forma de pagamento
+- 📱 **Responsivo** (mobile → tablet → desktop) e pronto para PWA
+
+> 🔒 **Segurança:** é 100% demonstração. O QR Code usa uma chave PIX que
+> não existe em nenhum banco (nenhum pagamento é possível) e a interface
+> deixa isso explícito ao usuário.
 
 ---
 
