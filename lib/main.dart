@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ecommerce/pages/homepage/home_page.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+import 'app.dart';
+import 'data/demo_product_repository.dart';
+import 'providers/cart_provider.dart';
+import 'providers/catalog_provider.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      // home: SliderCategorias(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()..init()),
+        ChangeNotifierProvider(
+          create: (_) => CatalogProvider(DemoProductRepository())..load(),
+        ),
+      ],
+      child: const ModaPraiaApp(),
     ),
   );
 }
