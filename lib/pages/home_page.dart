@@ -274,11 +274,11 @@ class _HomePageState extends State<HomePage> {
 
           // ===== Rodapé (desktop) =====
           if (_isDesktop)
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Container(
                 color: AppTheme.deep,
-                padding: EdgeInsets.symmetric(vertical: 28),
-                child: Column(
+                padding: const EdgeInsets.symmetric(vertical: 28),
+                child: const Column(
                   children: [
                     Text(
                       'MODA PRAIA SANTOS',

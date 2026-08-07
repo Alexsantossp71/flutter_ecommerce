@@ -133,23 +133,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
           const SizedBox(height: 8),
           Card(
-            child: Column(
-              children: [
-                RadioListTile<String>(
-                  title: const Text('Cartão de crédito'),
-                  subtitle: const Text('Simulação — nenhuma cobrança'),
-                  value: 'Cartão',
-                  groupValue: _paymentMethod,
-                  onChanged: (value) => setState(() => _paymentMethod = value!),
-                ),
-                RadioListTile<String>(
-                  title: const Text('Pix'),
-                  subtitle: const Text('Simulação — nenhuma cobrança'),
-                  value: 'Pix',
-                  groupValue: _paymentMethod,
-                  onChanged: (value) => setState(() => _paymentMethod = value!),
-                ),
-              ],
+            child: RadioGroup<String>(
+              groupValue: _paymentMethod,
+              onChanged: (value) => setState(() => _paymentMethod = value!),
+              child: const Column(
+                children: [
+                  RadioListTile<String>(
+                    title: Text('Cartão de crédito'),
+                    subtitle: Text('Simulação — nenhuma cobrança'),
+                    value: 'Cartão',
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Pix'),
+                    subtitle: Text('Simulação — nenhuma cobrança'),
+                    value: 'Pix',
+                  ),
+                ],
+              ),
             ),
           ),
         ],

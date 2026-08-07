@@ -256,11 +256,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
           if (MediaQuery.sizeOf(context).width >= 900)
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Container(
                 color: AppTheme.deep,
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Center(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: const Center(
                   child: Text(
                     'MODA PRAIA SANTOS • © 2026',
                     style: TextStyle(
