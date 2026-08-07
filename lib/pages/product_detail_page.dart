@@ -12,6 +12,9 @@ import 'cart_page.dart';
 
 /// Detalhe do produto: imagem em destaque, preço, quantidade,
 /// benefícios e sugestões da mesma categoria.
+///
+/// Responsivo: no mobile a imagem fica no AppBar expansível;
+/// no desktop (>=900px) vira duas colunas (imagem + informações).
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key, required this.productId});
 
@@ -23,8 +26,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int _quantity = 1;
-
-  Product? product;
+  Product? _product;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         break;
       }
     }
-    product = found;
+    _product = found;
+    final product = found;
     if (product == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Produto')),
@@ -47,11 +50,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
 
     final theme = Theme.of(context);
+    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
     final related = catalog.products
         .where((p) => p.id != product.id && p.category == product.category)
         .toList();
-
-    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
 
     return Scaffold(
       body: CustomScrollView(
@@ -72,7 +74,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
 
-          // ===== Desktop: barra fixa + duas colunas =====
+          // ===== Desktop: barra fixa =====
           if (isDesktop)
             SliverAppBar(
               pinned: true,
@@ -84,6 +86,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
 
+          // ===== Conteúdo (info em mobile ou duas colunas no desktop) =====
           SliverToBoxAdapter(
             child: Center(
               child: ConstrainedBox(
@@ -113,7 +116,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             ),
                             const SizedBox(width: 32),
                             // Informações à direita
-                            Expanded(flex: 4, child: _buildInfo(theme, cart)),
+                            Expanded(
+                              flex: 4,
+                              child: _buildInfo(theme, cart),
+                            ),
                           ],
                         ),
                       )
@@ -124,124 +130,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
           ),
-                      Text(
-                        product.category.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppTheme.gold,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        product.name,
-                        style: theme.textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w900),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        formatCurrency(product.price),
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          color: AppTheme.sea,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      Text(
-                        product.description,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          height: 1.6,
-                          color: AppTheme.ink.withValues(alpha: 0.85),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // benefícios
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: const [
-                          _BenefitChip(
-                              icon: Icons.local_shipping_outlined,
-                              label: 'Frete grátis'),
-                          _BenefitChip(
-                              icon: Icons.swap_horiz, label: 'Troca fácil'),
-                          _BenefitChip(
-                              icon: Icons.verified_user_outlined,
-                              label: 'Compra segura'),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      // quantidade + total
-                      Row(
-                        children: [
-                          _QuantitySelector(
-                            value: _quantity,
-                            onChanged: (value) =>
-                                setState(() => _quantity = value),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Text(
-                              'Total: ${formatCurrency(product.price * _quantity)}',
-                              style: theme.textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: double.infinity,
-                        child: FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: AppTheme.sea,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          onPressed: () {
-                            cart.addProduct(product, quantity: _quantity);
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    '$_quantity × ${product.name} no carrinho',
-                                  ),
-                                  duration: const Duration(seconds: 2),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                          },
-                          icon: const Icon(Icons.add_shopping_cart),
-                          label: const Text('Adicionar ao carrinho'),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(52),
-                            side: const BorderSide(color: AppTheme.sea),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CartPage(),
-                            ),
-                          ),
-                          child: const Text(
-                            'Ver carrinho',
-                            style: TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-          // relacionados
+
+          // ===== Relacionados =====
           if (related.isNotEmpty)
             SliverToBoxAdapter(
               child: Center(
@@ -302,16 +192,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
             ),
+
+          // ===== Rodapé =====
           const SliverToBoxAdapter(child: SiteFooter()),
         ],
       ),
     );
   }
-}
 
-  /// Conteúdo de informações do produto (usado em mobile e desktop).
+  /// Conteúdo de informações do produto (mobile e desktop).
   Widget _buildInfo(ThemeData theme, CartProvider cart) {
-    final product = this.product!;
+    final product = _product!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -354,8 +245,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           children: const [
             _BenefitChip(
                 icon: Icons.local_shipping_outlined, label: 'Frete grátis'),
-            _BenefitChip(
-                icon: Icons.swap_horiz, label: 'Troca fácil'),
+            _BenefitChip(icon: Icons.swap_horiz, label: 'Troca fácil'),
             _BenefitChip(
                 icon: Icons.verified_user_outlined, label: 'Compra segura'),
           ],
@@ -426,6 +316,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ],
     );
   }
+}
 
 class _BenefitChip extends StatelessWidget {
   const _BenefitChip({required this.icon, required this.label});
