@@ -229,15 +229,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    'Nossos produtos',
-                    style: TextStyle(
-                      fontSize: _isDesktop ? 22 : 18,
-                      fontWeight: FontWeight.w800,
-                      color: AppTheme.ink,
+                  Expanded(
+                    child: Text(
+                      'Nossos produtos',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: _isDesktop ? 22 : 18,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.ink,
+                      ),
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   if (!_isDesktop)
                     Text(
                       '${catalog.filtered.length} itens',

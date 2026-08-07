@@ -131,7 +131,13 @@ void main() {
     // Identidade e benefícios visíveis no desktop
     expect(find.text('Moda Praia Santos'), findsOneWidget);
     expect(find.text('Frete grátis'), findsOneWidget);
-    // Rodapé com colunas de navegação
+
+    // Rola até o rodapé (Slivers são construídos sob demanda)
+    await tester.scrollUntilVisible(
+      find.text('NAVEGAÇÃO'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('NAVEGAÇÃO'), findsOneWidget);
     expect(find.text('CONTATO'), findsOneWidget);
 
