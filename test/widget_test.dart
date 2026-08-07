@@ -38,6 +38,16 @@ Future<void> _settle(WidgetTester tester) async {
   );
 }
 
+/// Rola o scroll principal até o widget ficar visível e clicável.
+Future<void> _scrollTo(WidgetTester tester, Finder finder) async {
+  await tester.dragUntilVisible(
+    finder,
+    find.byType(Scrollable).first,
+    const Offset(0, -200),
+  );
+  await tester.pump(const Duration(milliseconds: 300));
+}
+
 void _usePhoneViewport(WidgetTester tester) {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1.0;
@@ -100,10 +110,12 @@ void main() {
     // abre o detalhe do primeiro produto
     await tester.tap(find.byType(ProductCard).first);
     await _settle(tester);
-    await tester.ensureVisible(find.text('Adicionar ao carrinho'));
+
+    // rola até o botão de adicionar e toca
+    await _scrollTo(tester, find.text('Adicionar ao carrinho'));
     await tester.tap(find.text('Adicionar ao carrinho'));
     await _settle(tester);
-    await tester.ensureVisible(find.text('Ver carrinho'));
+    await _scrollTo(tester, find.text('Ver carrinho'));
     await tester.tap(find.text('Ver carrinho'));
     await _settle(tester);
 
@@ -146,15 +158,15 @@ void main() {
     // adiciona o primeiro produto ao carrinho pela grade
     await tester.tap(find.byType(ProductCard).first);
     await _settle(tester);
-    await tester.ensureVisible(find.text('Adicionar ao carrinho'));
+    await _scrollTo(tester, find.text('Adicionar ao carrinho'));
     await tester.tap(find.text('Adicionar ao carrinho'));
     await _settle(tester);
-    await tester.ensureVisible(find.text('Ver carrinho'));
+    await _scrollTo(tester, find.text('Ver carrinho'));
     await tester.tap(find.text('Ver carrinho'));
     await _settle(tester);
 
     // vai para o checkout
-    await tester.ensureVisible(find.text('Finalizar compra'));
+    await _scrollTo(tester, find.text('Finalizar compra'));
     await tester.tap(find.text('Finalizar compra'));
     await _settle(tester);
 
