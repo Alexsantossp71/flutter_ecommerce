@@ -133,11 +133,8 @@ void main() {
     expect(find.text('Frete grátis'), findsOneWidget);
 
     // Rola até o rodapé (Slivers são construídos sob demanda)
-    await tester.scrollUntilVisible(
-      find.text('NAVEGAÇÃO'),
-      400,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -3000));
+    await _advance(tester);
     expect(find.text('NAVEGAÇÃO'), findsOneWidget);
     expect(find.text('CONTATO'), findsOneWidget);
 

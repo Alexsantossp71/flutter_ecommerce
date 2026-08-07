@@ -118,13 +118,18 @@ class _ProductCardState extends State<ProductCard> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              formatCurrency(product.price),
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                color: AppTheme.sea,
-                                fontWeight: FontWeight.w900,
+                            Expanded(
+                              child: Text(
+                                formatCurrency(product.price),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: AppTheme.sea,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
                             ),
+                            const SizedBox(width: 4),
                             // botão circular de adicionar
                             Material(
                               color: inCart ? AppTheme.gold : AppTheme.sea,
