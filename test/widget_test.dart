@@ -118,4 +118,25 @@ void main() {
 
     _drainToleratedExceptions(tester);
   });
+
+  testWidgets('desktop: grade com mais colunas e footer visível', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1440, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    app.main();
+    await _advance(tester);
+    await _advance(tester);
+
+    // Identidade e benefícios visíveis no desktop
+    expect(find.text('Moda Praia Santos'), findsOneWidget);
+    expect(find.text('Frete grátis'), findsOneWidget);
+    // Rodapé com colunas de navegação
+    expect(find.text('NAVEGAÇÃO'), findsOneWidget);
+    expect(find.text('CONTATO'), findsOneWidget);
+
+    _drainToleratedExceptions(tester);
+  });
+
+
 }

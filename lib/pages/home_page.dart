@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/catalog_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/benefits_bar.dart';
 import '../widgets/product_card.dart';
+import '../widgets/site_footer.dart';
 import 'cart_page.dart';
 import 'product_detail_page.dart';
 
@@ -209,6 +211,46 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
+          // ===== Benefícios (mobile e desktop) =====
+          const SliverToBoxAdapter(child: BenefitsBar()),
+
+          // ===== Título da seção =====
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 22, 16, 4),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 22,
+                    decoration: BoxDecoration(
+                      color: AppTheme.gold,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Nossos produtos',
+                    style: TextStyle(
+                      fontSize: _isDesktop ? 22 : 18,
+                      fontWeight: FontWeight.w800,
+                      color: AppTheme.ink,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (!_isDesktop)
+                    Text(
+                      '${catalog.filtered.length} itens',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.ink.withValues(alpha: 0.5),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
           // ===== Grade de produtos =====
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
@@ -272,31 +314,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-          // ===== Rodapé (desktop) =====
-          if (_isDesktop)
-            SliverToBoxAdapter(
-              child: Container(
-                color: AppTheme.deep,
-                padding: const EdgeInsets.symmetric(vertical: 28),
-                child: const Column(
-                  children: [
-                    Text(
-                      'MODA PRAIA SANTOS',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 3,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      'Estilo litorâneo • Feito com Flutter • © 2026',
-                      style: TextStyle(color: Colors.white70, fontSize: 13),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          // ===== Rodapé (mobile e desktop) =====
+          const SliverToBoxAdapter(child: SiteFooter()),
         ],
       ),
     );

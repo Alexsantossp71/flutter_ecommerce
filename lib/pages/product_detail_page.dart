@@ -7,6 +7,7 @@ import '../providers/catalog_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/currency.dart';
 import '../widgets/product_card.dart';
+import '../widgets/site_footer.dart';
 import 'cart_page.dart';
 
 /// Detalhe do produto: imagem em destaque, preço, quantidade,
@@ -23,6 +24,8 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int _quantity = 1;
 
+  Product? product;
+
   @override
   Widget build(BuildContext context) {
     final catalog = context.watch<CatalogProvider>();
@@ -35,7 +38,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         break;
       }
     }
-    final product = found;
+    product = found;
     if (product == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Produto')),
@@ -48,31 +51,79 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         .where((p) => p.id != product.id && p.category == product.category)
         .toList();
 
+    final isDesktop = MediaQuery.sizeOf(context).width >= 900;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 320,
-            backgroundColor: AppTheme.sea,
-            foregroundColor: Colors.white,
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Hero(
-                tag: 'product-${product.id}',
-                child: Image.asset(product.imageAsset, fit: BoxFit.cover),
+          // ===== Mobile: imagem em AppBar expansível =====
+          if (!isDesktop)
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: 320,
+              backgroundColor: AppTheme.sea,
+              foregroundColor: Colors.white,
+              flexibleSpace: FlexibleSpaceBar(
+                collapseMode: CollapseMode.pin,
+                background: Hero(
+                  tag: 'product-${product.id}',
+                  child: Image.asset(product.imageAsset, fit: BoxFit.cover),
+                ),
               ),
             ),
-          ),
+
+          // ===== Desktop: barra fixa + duas colunas =====
+          if (isDesktop)
+            SliverAppBar(
+              pinned: true,
+              backgroundColor: AppTheme.deep,
+              foregroundColor: Colors.white,
+              title: const Text(
+                'Moda Praia Santos',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+
           SliverToBoxAdapter(
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 760),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                constraints: const BoxConstraints(maxWidth: 1100),
+                child: isDesktop
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 28, 20, 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Imagem grande à esquerda
+                            Expanded(
+                              flex: 5,
+                              child: Hero(
+                                tag: 'product-${product.id}',
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(24),
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: Image.asset(
+                                      product.imageAsset,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 32),
+                            // Informações à direita
+                            Expanded(flex: 4, child: _buildInfo(theme, cart)),
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: _buildInfo(theme, cart),
+                      ),
+              ),
+            ),
+          ),
                       Text(
                         product.category.toUpperCase(),
                         style: const TextStyle(
@@ -190,10 +241,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                     ],
                   ),
-                ),
-              ),
-            ),
-          ),
           // relacionados
           if (related.isNotEmpty)
             SliverToBoxAdapter(
@@ -255,28 +302,130 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ),
               ),
             ),
-          if (MediaQuery.sizeOf(context).width >= 900)
-            SliverToBoxAdapter(
-              child: Container(
-                color: AppTheme.deep,
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: const Center(
-                  child: Text(
-                    'MODA PRAIA SANTOS • © 2026',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          const SliverToBoxAdapter(child: SiteFooter()),
         ],
       ),
     );
   }
 }
+
+  /// Conteúdo de informações do produto (usado em mobile e desktop).
+  Widget _buildInfo(ThemeData theme, CartProvider cart) {
+    final product = this.product!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          product.category.toUpperCase(),
+          style: const TextStyle(
+            color: AppTheme.gold,
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.6,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          product.name,
+          style: theme.textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.w900),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          formatCurrency(product.price),
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: AppTheme.sea,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 18),
+        Text(
+          product.description,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            height: 1.6,
+            color: AppTheme.ink.withValues(alpha: 0.85),
+          ),
+        ),
+        const SizedBox(height: 20),
+        // benefícios
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: const [
+            _BenefitChip(
+                icon: Icons.local_shipping_outlined, label: 'Frete grátis'),
+            _BenefitChip(
+                icon: Icons.swap_horiz, label: 'Troca fácil'),
+            _BenefitChip(
+                icon: Icons.verified_user_outlined, label: 'Compra segura'),
+          ],
+        ),
+        const SizedBox(height: 24),
+        // quantidade + total
+        Row(
+          children: [
+            _QuantitySelector(
+              value: _quantity,
+              onChanged: (value) => setState(() => _quantity = value),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                'Total: ${formatCurrency(product.price * _quantity)}',
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.sea,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            onPressed: () {
+              cart.addProduct(product, quantity: _quantity);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text('$_quantity × ${product.name} no carrinho'),
+                    duration: const Duration(seconds: 2),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+            },
+            icon: const Icon(Icons.add_shopping_cart),
+            label: const Text('Adicionar ao carrinho'),
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              side: const BorderSide(color: AppTheme.sea),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CartPage()),
+            ),
+            child: const Text(
+              'Ver carrinho',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
 class _BenefitChip extends StatelessWidget {
   const _BenefitChip({required this.icon, required this.label});
